@@ -22,26 +22,46 @@ export class ForbiddenError extends Error {
 
 export async function requireMember(userId: string): Promise<MemberRow> {
   const sql = await getSql();
-  const rows = await sql<{ id: number; wallet_id: number; user_id: string; role: MemberRole; display_name: string; username: string; }>`
+  const rows = await sql<{
+    id: number;
+    wallet_id: number;
+    user_id: string;
+    role: MemberRole;
+    display_name: string;
+    username: string;
+  }>`
     select id, wallet_id, user_id, role, display_name, username
     from wallet_members
     where user_id = ${userId}
     limit 1
   `;
   const row = rows[0];
-  if (!row) throw new ForbiddenError("هذا الحساب غير مرتبط بالمحفظة");
-  return { id: row.id, walletId: row.wallet_id, userId: row.user_id, role: row.role, displayName: row.display_name, username: row.username };
+  if (!row) {
+    throw new ForbiddenError("هذا الحساب غير مرتبط بالمحفظة");
+  }
+  return {
+    id: row.id,
+    walletId: row.wallet_id,
+    userId: row.user_id,
+    role: row.role,
+    displayName: row.display_name,
+    username: row.username,
+  };
 }
 
 export async function requireManager(userId: string): Promise<MemberRow> {
   const member = await requireMember(userId);
-  if (member.role !== "manager") throw new ForbiddenError("هذه الصفحة للمدير فقط");
+  if (member.role !== "manager") {
+    throw new ForbiddenError("هذه الصفحة للمدير فقط");
+  }
   return member;
 }
 
 export async function managerExists(): Promise<boolean> {
   const sql = await getSql();
-  const rows = await sql<{ n: number }>`select count(*)::int as n from wallet_members where role = 'manager'`;
+  const rows = await sql<{ n: number }>`
+    select count(*)::int as n from wallet_members where role = 'manager'
+  `;
   return (rows[0]?.n ?? 0) > 0;
 }
 
