@@ -18,11 +18,15 @@ export {
   listOps,
   addOpsMovement,
   updateMovement,
+} from "./api-ops";
+export {
   getLedger,
   listAgents,
   addAgent,
   deleteAgent,
   addAgentMovement,
+} from "./api-ledger";
+export {
   exportBackup,
   restoreBackup,
-} from "./api-ops";
+} from "./api-backup";
