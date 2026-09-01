@@ -1,3 +1,4 @@
+/** Login is username+password; Better Auth stores an email. */
 export const AUTH_EMAIL_DOMAIN = "shabaka.net";
 
 export function usernameToEmail(username: string): string {
