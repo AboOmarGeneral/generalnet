@@ -1,0 +1,2 @@
+# generalnet
+account my wallet 
